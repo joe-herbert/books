@@ -1,0 +1,68 @@
+doctype html
+html
+    head
+        include common/head.pug
+        +head()
+        link(rel="stylesheet", href="/css/index.css")
+    body
+        include common/loader.html
+        include common/body.pug
+        +body()
+        h1 Miss Bibb's Books
+        if title
+            h2= title
+        if filters && filters.length !== 0
+            #filters
+                span Filters: 
+                each filter in filters
+                    a#filter(class=filter.type + "Filter", data-id=filter.id, data-type=filter.type).filter= filter.name
+
+        if books.length == 0
+            span We couldn't find any books - try a different filter or try again later!
+        else
+            form(name="addBook", action="#", onsubmit="addBookFormSubmit(this); return false")
+                table
+                    tr
+                        th
+                        th#titleCol Title
+                        th#authorCol Author
+                        th#genreCol Genre
+                        th#tagCol Tags
+                    each book in books
+                        tr
+                            td
+                                img(src=book.image)
+                            td 
+                                a(href="./book?id=" + encodeURIComponent(book.id))= book.title
+                            td
+                                a(href="./?author=" + encodeURIComponent(book.author.id))= book.author.name
+                            td
+                                each genre in book.genres
+                                    a(href="./?genre=" + encodeURIComponent(genre.id)).genre= genre.name
+                            td
+                                each tag in book.tags
+                                    a(href="./?tag=" + encodeURIComponent(tag.id)).tag= tag.name
+                            if admin
+                                td
+                    if admin
+                        tr
+                            td
+                            td
+                                div#titleInput
+                            td
+                                div#authorInput
+                            td
+                                div#genreInput
+                            td
+                                div#tagInput
+                            td#addCol
+                                button Add
+
+        script(src="/libs/searchdown.min.js")
+        script(type="text/javascript").
+            const authors = !{JSON.stringify(authors)};
+            const genres = !{JSON.stringify(genres)};
+            const tags = !{JSON.stringify(tags)};
+        script(src="/js/index.js")
+        if admin
+            script(src="/js/indexAdmin.js")

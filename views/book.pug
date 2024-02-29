@@ -1,0 +1,57 @@
+doctype html
+html
+    head
+        include common/head.pug
+        +head()
+        link(rel="stylesheet", href="/css/book.css")
+    body
+        include common/loader.html
+        include common/body.pug
+        +body()
+        a(href="./") Home
+        br
+        h1.bookField= book.name
+        div#nameInput.editInput
+        br
+        img(src=book.image, alt="Book cover")
+        input(type="file").editInput
+        div#author Author: 
+            a(href="./?author=" + encodeURIComponent(book.Author.id)).bookField= book.Author.name
+            div#authorInput.editInput
+        br
+        div#genres Genres:
+            each genre in book.Genres
+                a(href="./?genre=" + encodeURIComponent(genre.id)).genre.bookField= genre.name
+            div#genreInput.editInput
+        br
+        div#tags Tags:
+            each tag in book.Tags
+                a(href="./?tag=" + encodeURIComponent(tag.id)).tag.bookField= tag.name
+            div#tagInput.editInput
+        br
+        if notes
+            div#notes Notes:
+                pre.bookField= notes
+                textarea#notesInput.editInput
+        else
+            div#notes.hide Notes:
+                pre.bookField.hide
+                textarea#notesInput.editInput
+        br
+
+        if admin
+            button(onclick="editBook()").bookField Edit
+            button(onclick="saveBook()").editInput#saveBook Save
+
+        script(src="/libs/searchdown.min.js")
+        script(type="text/javascript").
+            const authors = !{JSON.stringify(authors)};
+            const genres = !{JSON.stringify(genres)};
+            const tags = !{JSON.stringify(tags)};
+            let bookName = "!{book.name}";
+            let bookAuthor = "!{book.Author.name}";
+            let bookGenres = !{JSON.stringify(book.Genres.map(genre => genre.name))};
+            let bookTags = !{JSON.stringify(book.Tags.map(tag => tag.name))};
+        script(src="/js/book.js")
+        if admin
+            script(src="/js/bookAdmin.js")

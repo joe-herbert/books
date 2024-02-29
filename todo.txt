@@ -1,0 +1,13 @@
+Handle edit and add book responses
+Everything with cover images
+Add a way to select multiple filters
+Clear all filters button
+Search
+Login link somewhere
+CSS
+Book opening svg animation
+
+
+Extras:
+Each user has a To Read List - button next to book to add/remove from list, also page to view TRL
+Each user has an account page

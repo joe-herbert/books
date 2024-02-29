@@ -1,0 +1,13 @@
+doctype html
+html
+    head
+        include common/head.pug
+        link(rel="stylesheet", href="/css/index.css")
+        +head()
+    body
+        include common/body.pug
+        +body()
+        h1 Book Not Found
+        span We couldn't find that book, sorry!
+        a.button(href="/") Home
+

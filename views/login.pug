@@ -1,0 +1,14 @@
+doctype html
+html
+    head
+        include common/head.pug
+        +head()
+    body
+        include common/body.pug
+        +body()
+        h1 Log In
+        form(action="#", onsubmit="loginSubmit(this); return false")
+            input(type="text", name="username", value="", placeholder="Username")#username
+            input(type="password", name="password", value="", placeholder="Password")#password
+            button Submit
+        script(src="/js/login.js")

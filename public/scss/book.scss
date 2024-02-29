@@ -1,0 +1,18 @@
+@use "base.scss";
+
+.editInput,
+.editInput.searchdown {
+    display: none;
+}
+.bookField {
+    display: inline-block;
+}
+
+body.edit {
+    .editInput {
+        display: inline-block;
+    }
+    .bookField {
+        display: none;
+    }
+}
