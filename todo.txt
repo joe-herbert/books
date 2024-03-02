@@ -1,11 +1,14 @@
 Handle edit and add book responses
-Everything with cover images
 Add a way to select multiple filters
 Clear all filters button
 Search
 Login link somewhere
-CSS
-Book opening svg animation
+Check image size before upload
+Admin ability to delete authors, tags, genres
+Handle errors properly with toast
+Ability to remove image
+Delete book from edit page
+Notes styles
 
 
 Extras:

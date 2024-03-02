@@ -1,2 +1,4 @@
-mixin body()
+mixin body(base)
+    if base
+        script(src="/js/base.js")
     //shared menus, logo image etc goes here

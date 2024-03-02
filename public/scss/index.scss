@@ -29,6 +29,16 @@ table {
         vertical-align: middle;
     }
 
+    td:first-of-type {
+        max-width: max(75px, 6vw);
+        min-width: 75px;
+        padding-left: 10px;
+    }
+
+    td:last-of-type {
+        padding-right: 10px;
+    }
+
     th {
         font-size: 20px;
         text-align: left;
@@ -36,6 +46,25 @@ table {
 
     tr:nth-of-type(even) {
         background-color: #4444662a;
+    }
+
+    img {
+        width: 100%;
+        max-height: 100px;
+        margin: 0 auto;
+        display: block;
+
+        &:not([src=""]) {
+            box-shadow: 0 0 3px 0px #444;
+        }
+    }
+
+    button {
+        width: 60px;
+    }
+
+    .sdInputWrapper {
+        padding: 0;
     }
 }
 

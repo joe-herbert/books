@@ -30,13 +30,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function addBookFormSubmit(form) {
+function addBookFormSubmit() {
+    let input = document.querySelector("#coverInput");
+    if (!input.files || !input.files[0]) {
+        sendBook(undefined);
+    } else {
+        readFile(true, sendBook);
+    }
+}
+
+function sendBook(img) {
     const data = {
-        title: sdGetValue(form.title, true),
-        author: sdGetValue(form.author, true),
-        genres: sdGetValue(form.genres, true),
-        tags: sdGetValue(form.tags, true),
+        title: sdGetValue("sdInput-title", true),
+        author: sdGetValue("sdInput-author", true),
+        genres: sdGetValue("sdInput-genres", true),
+        tags: sdGetValue("sdInput-tags", true),
     };
+    if (img) {
+        data.cover = img;
+    }
     fetch(`${window.location.origin}/books/addBook`, {
         method: "POST",
         body: JSON.stringify(data),
@@ -45,6 +57,8 @@ function addBookFormSubmit(form) {
         },
     }).then((response) => {
         if (response.ok) {
+            console.log(response);
+            console.log(data);
             //TODO: add book to table
         } else {
             //TODO: handle error

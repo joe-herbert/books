@@ -35,9 +35,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function editBook() {
     document.querySelector("body").classList.add("edit");
+    document.getElementById("notes").classList.remove("hide");
+}
+
+function cancelEdit() {
+    document.querySelector("body").classList.remove("edit");
+    if (document.getElementById("notesField").innerHTML === "") {
+        document.getElementById("notes").classList.add("hide");
+    }
 }
 
 function saveBook() {
+    let input = document.querySelector("#coverInput");
+    if (!input.files || !input.files[0]) {
+        sendBook(undefined);
+    } else {
+        readFile(true, sendBook);
+    }
+}
+
+function sendBook(img) {
     const params = new URLSearchParams(window.location.search);
     const data = {
         id: params.get("id"),
@@ -47,6 +64,9 @@ function saveBook() {
         tags: sdGetValue("sdInput-tagInput", true),
         notes: document.getElementById("notesInput").value,
     };
+    if (img) {
+        data.cover = img;
+    }
     fetch(`${window.location.origin}/books/editBook`, {
         method: "POST",
         body: JSON.stringify(data),
@@ -55,8 +75,8 @@ function saveBook() {
         },
     }).then((response) => {
         if (response.ok) {
-            document.querySelector("body").classList.remove("edit");
             //TODO: update all fields to new inputs
+            cancelEdit();
         } else {
             //TODO: handle error
         }

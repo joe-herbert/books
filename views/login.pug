@@ -3,7 +3,9 @@ html
     head
         include common/head.pug
         +head()
+        link(rel="stylesheet", href="/css/login.css")
     body
+        include common/loader.html
         include common/body.pug
         +body()
         h1 Log In

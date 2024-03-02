@@ -10,9 +10,78 @@
 
 body.edit {
     .editInput {
-        display: inline-block;
+        display: block;
     }
     .bookField {
         display: none;
+    }
+    #imgWrapper:has(img[src=""].bookField, img[src="null"].bookField) {
+        display: block;
+    }
+    #imgWrapper span {
+        min-height: 250px;
+        display: block;
+        cursor: pointer;
+    }
+    #buttons .editInput {
+        display: inline-block;
+    }
+}
+
+#imgWrapper {
+    float: left;
+    width: 50%;
+    padding-right: 30px;
+}
+
+body:not(.edit) {
+    #imgWrapper {
+        min-height: 250px;
+    }
+}
+
+img {
+    box-shadow: 0 0 15px -5px black;
+    object-fit: contain;
+}
+
+#imgWrapper:has(img[src=""].bookField, img[src="null"].bookField) {
+    display: none;
+}
+
+#nameInput {
+    width: 100%;
+}
+
+#notesInput {
+    background-color: inherit;
+    border: 1px solid black;
+    width: 300px;
+    height: 52px;
+}
+
+h1.bookField {
+    display: block;
+    margin: 30px auto;
+}
+
+#bookWrapper {
+    width: 80vw;
+    margin: 50px auto 0;
+    box-shadow: 0 0 10px -5px black;
+    overflow: auto;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.spacer {
+    clear: both;
+}
+
+#buttons {
+    width: 100%;
+    text-align: center;
+    button {
+        margin: 20px 10px;
     }
 }

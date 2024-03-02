@@ -7,7 +7,7 @@ html
     body
         include common/loader.html
         include common/body.pug
-        +body()
+        +body(true)
         h1 Miss Bibb's Books
         if title
             h2= title
@@ -28,10 +28,27 @@ html
                         th#authorCol Author
                         th#genreCol Genre
                         th#tagCol Tags
+                    if admin
+                        tr
+                            td
+                                label(for="coverInput").editInput
+                                    input(type="file", name="coverInput")#coverInput.hide
+                                    img(src="", alt="Cover")#cover
+                            td
+                                div#titleInput
+                            td
+                                div#authorInput
+                            td
+                                div#genreInput
+                            td
+                                div#tagInput
+                            td#addCol
+                                button Add
                     each book in books
                         tr
                             td
-                                img(src=book.image)
+                                if book.cover
+                                    img(src="" + book.cover)
                             td 
                                 a(href="./book?id=" + encodeURIComponent(book.id))= book.title
                             td
@@ -44,19 +61,7 @@ html
                                     a(href="./?tag=" + encodeURIComponent(tag.id)).tag= tag.name
                             if admin
                                 td
-                    if admin
-                        tr
-                            td
-                            td
-                                div#titleInput
-                            td
-                                div#authorInput
-                            td
-                                div#genreInput
-                            td
-                                div#tagInput
-                            td#addCol
-                                button Add
+                                    button(data-id=book.id, data-title=book.title).delete Delete
 
         script(src="/libs/searchdown.min.js")
         script(type="text/javascript").

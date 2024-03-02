@@ -4,6 +4,7 @@ const models = require("../models");
 const bcrypt = require("bcrypt");
 const { sendErr } = require("./base");
 const { Op } = require("sequelize");
+const { admin } = require("../middleware/admin");
 
 function whereSplit(query, where, prop) {
     if (typeof query === "object") {
@@ -61,6 +62,7 @@ router.get("/", (req, res) => {
             books.push({
                 id: book.id,
                 title: book.name,
+                cover: book.cover,
                 author: {
                     id: book.Author.id,
                     name: book.Author.name,
@@ -165,7 +167,7 @@ function findName(records, id) {
     return false;
 }
 
-router.post("/addBook", (req, res) => {
+router.post("/addBook", admin, (req, res) => {
     console.log(req.body.title);
     models.Author.findOrCreate({
         where: {
@@ -177,6 +179,7 @@ router.post("/addBook", (req, res) => {
             models.Book.create({
                 name: req.body.title,
                 authorId: author[0].id,
+                cover: req.body.cover,
             }).then((book) => {
                 console.log(book);
                 //generate genre and tag promises
@@ -268,6 +271,7 @@ router.get("/book", (req, res) => {
             ],
         })
             .then((book) => {
+                console.log(book.cover);
                 if (req.session && req.session.userId) {
                     models.User.findOne({
                         where: {
@@ -330,7 +334,7 @@ router.get("/book", (req, res) => {
     }
 });
 
-router.post("/editBook", (req, res) => {
+router.post("/editBook", admin, (req, res) => {
     if (!req.body.name || !req.body.author || !req.body.id) {
         //error
         console.log(req.body.name, req.body.author, req.body.id);
@@ -357,6 +361,9 @@ router.post("/editBook", (req, res) => {
                     }
                     if (req.body.notes) {
                         book.notes = req.body.notes;
+                    }
+                    if (req.body.cover) {
+                        book.cover = req.body.cover;
                     }
                     book.save()
                         .then((dbBook) => {
@@ -427,6 +434,7 @@ router.post("/editBook", (req, res) => {
                                         .then((result) => {
                                             console.log("Complete");
                                             console.log(result);
+                                            res.sendStatus(200);
                                         })
                                         .catch((err) => {
                                             //error
@@ -452,6 +460,31 @@ router.post("/editBook", (req, res) => {
             //error
             console.error(err);
         });
+});
+
+router.post("/deleteBook", admin, (req, res) => {
+    if (req.body.id) {
+        models.Book.destroy({
+            where: {
+                id: req.body.id,
+            },
+        })
+            .then((rowsDeleted) => {
+                if (rowsDeleted >= 1) {
+                    res.sendStatus(200);
+                } else {
+                    //error
+                    console.error("No row deleted");
+                }
+            })
+            .catch((err) => {
+                //error
+                console.error(err);
+            });
+    } else {
+        //error
+        console.error("No book id provided");
+    }
 });
 
 router.get("/login", (req, res) => {
