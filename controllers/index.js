@@ -56,6 +56,7 @@ router.get("/", (req, res) => {
                 where: tagWhere,
             },
         ],
+        order: ["name"],
     }).then((dbBooks) => {
         let books = [];
         for (let book of dbBooks) {
@@ -492,6 +493,7 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
+    console.log(req.body.username);
     models.User.findOne({
         where: {
             username: req.body.username,

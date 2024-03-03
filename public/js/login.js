@@ -3,17 +3,21 @@ async function loginSubmit(form) {
         username: form.username.value,
         password: form.password.value,
     };
-    fetch(`${window.location.origin}/book/login`, {
+    fetch(`${window.location.origin}/books/login`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
             "Content-Type": "application/json",
         },
-    })
-        .then((response) => response.text())
-        .then((response) => {
-            console.log(response);
-        });
+    }).then((response) => {
+        if (response.ok) {
+            if (document.referrer && !document.referrer.includes("login")) {
+                window.location.href = document.referrer;
+            } else {
+                window.location.href = window.location.origin + "/books/";
+            }
+        } else {
+            //TODO: handle error
+        }
+    });
 }

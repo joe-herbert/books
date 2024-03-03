@@ -9,6 +9,8 @@ Handle errors properly with toast
 Ability to remove image
 Delete book from edit page
 Notes styles
+Add book ISBN column
+Add book link column
 
 
 Extras:
