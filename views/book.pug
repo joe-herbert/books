@@ -7,51 +7,66 @@ html
     body
         include common/loader.html
         include common/body.pug
-        +body(true)
+        +body(true, user)
+        br
         a(href="./") &#8592; Home
         br
         #bookWrapper
-            h1.bookField= book.name
+            h1#nameField.bookField= book.name
             div#nameInput.editInput
             br
             #imgWrapper
-                img(src="" + book.cover, alt="Book cover").bookField
+                img(src="" + book.cover, alt="Book cover")#coverField.bookField
                 label(for="coverInput").editInput
                     input(type="file", name="coverInput")#coverInput.hide
-                    if (book.cover)
-                        img(src="" + book.cover, alt="Book cover - click to upload new cover")#cover
-                    else
-                        img(src="" + book.cover, alt="Book cover - click to upload new cover")#cover.hide
-                        span Click to upload new cover
-            div#author Author: 
-                a(href="./?author=" + encodeURIComponent(book.Author.id)).bookField= book.Author.name
+                    img(src="" + book.cover, alt="Book cover - click to upload new cover")#cover
+                    //span Click to upload new cover
+                br
+                button(onclick="removeImage()").editInput#clearCover Clear cover 
+            div#author
+                span.label Author: 
+                a(href="./?author=" + encodeURIComponent(book.Author.id))#authorField.bookField= book.Author.name
                 br.editInput
                 div#authorInput.editInput
-            br
-            div#genres Genres:
-                br
-                each genre in book.Genres
-                    a(href="./?genre=" + encodeURIComponent(genre.id)).genre.bookField= genre.name
+            div#genres
+                span.label Genres:
+                #genreField
+                    each genre in book.Genres
+                        a(href="./?genre=" + encodeURIComponent(genre.id)).genre.bookField= genre.name
+                br.editInput
                 div#genreInput.editInput
-            br
-            div#tags Tags:
-                br
-                each tag in book.Tags
-                    a(href="./?tag=" + encodeURIComponent(tag.id)).tag.bookField= tag.name
+            div#tags
+                span.label Tags:
+                #tagField
+                    each tag in book.Tags
+                        a(href="./?tag=" + encodeURIComponent(tag.id)).tag.bookField= tag.name
+                br.editInput
                 div#tagInput.editInput
-            br
+            //.spacer
+            div#blurb
+                p.bookField#blurbField
+                    span.label Blurb: 
+                    = book.blurb
+                br.editInput
+                div#blurbInput.editInput
+            - var isbnClass = (book.isbn ? "" : "hide")
+            div(class=isbnClass)#isbn
+                p.bookField#isbnField
+                    span.label ISBN: 
+                    = book.isbn
+                div#isbnInput.editInput
+            - var linkClass = (book.link ? "" : "hide")
+            div(class=linkClass)#link
+                span.label Link: 
+                a(href=book.link).bookField#linkField= book.link
+                div#linkInput.editInput
+            - var notesClass = (book.notes ? "" : "hide")
+            div(class=notesClass)#notes
+                p.bookField#notesField
+                    span.label Notes: 
+                    = book.notes
+                div#notesInput.editInput
             .spacer
-            if book.notes
-                div#notes Notes:
-                    br
-                    p.bookField#notesField= book.notes
-                    textarea#notesInput.editInput= book.notes
-            else
-                div#notes.hide Notes:
-                    br
-                    p.bookField#notesField
-                    textarea#notesInput.editInput
-            br
             if admin
                 #buttons
                     button(onclick="editBook()").bookField Edit
@@ -64,11 +79,17 @@ html
             const authors = !{JSON.stringify(authors)};
             const genres = !{JSON.stringify(genres)};
             const tags = !{JSON.stringify(tags)};
-            let bookName = "!{book.name}";
-            let bookAuthor = "!{book.Author.name}";
-            let bookGenres = !{JSON.stringify(book.Genres.map(genre => genre.name))};
-            let bookTags = !{JSON.stringify(book.Tags.map(tag => tag.name))};
-            let img64 = "!{book.cover}";
+            let book = {
+                name: "!{book.name}",
+                author: "!{book.Author.name}",
+                genres: !{JSON.stringify(book.Genres.map(genre => genre.name))},
+                tags: !{JSON.stringify(book.Tags.map(tag => tag.name))},
+                cover: "!{book.cover}",
+                blurb: "!{book.blurb}",
+                isbn: "!{book.isbn}",
+                link: "!{book.link}",
+                notes: "!{book.notes}",
+            };
         //script(src="/js/book.js")
         if admin
             script(src="/js/bookAdmin.js")

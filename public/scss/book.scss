@@ -4,27 +4,71 @@
 .editInput.searchdown {
     display: none;
 }
+
 .bookField {
     display: inline-block;
+}
+
+p.bookField,
+a.bookField,
+#genreField,
+#tagField {
+    margin: 10px 0;
+}
+
+#genreField,
+#tagField {
+    display: inline-block;
+    margin: 5px;
+
+    a.bookField {
+        margin: 0 5px 0 0;
+    }
 }
 
 body.edit {
     .editInput {
         display: block;
     }
+
     .bookField {
         display: none;
     }
+
     #imgWrapper:has(img[src=""].bookField, img[src="null"].bookField) {
         display: block;
     }
+
     #imgWrapper span {
         min-height: 250px;
-        display: block;
+        display: none;
         cursor: pointer;
     }
+
     #buttons .editInput {
         display: inline-block;
+    }
+
+    #imgWrapper label {
+        display: block;
+        text-align: center;
+
+        &:has(#cover[src=""]),
+        &:has(#cover[src="null"]) {
+            top: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+
+            & span {
+                display: block;
+            }
+
+            & ~ #clearCover {
+                display: none;
+            }
+        }
     }
 }
 
@@ -32,12 +76,9 @@ body.edit {
     float: left;
     width: 50%;
     padding-right: 30px;
-}
-
-body:not(.edit) {
-    #imgWrapper {
-        min-height: 250px;
-    }
+    min-height: 250px;
+    display: table;
+    position: relative;
 }
 
 img {
@@ -45,7 +86,7 @@ img {
     object-fit: contain;
 }
 
-#imgWrapper:has(img[src=""].bookField, img[src="null"].bookField) {
+#imgWrapper:has(img[src=""].bookField, img[src="null"].bookField, img[src="undefined"].bookField) {
     display: none;
 }
 
@@ -54,10 +95,7 @@ img {
 }
 
 #notesInput {
-    background-color: inherit;
-    border: 1px solid black;
-    width: 300px;
-    height: 52px;
+    font-family: inherit;
 }
 
 h1.bookField {
@@ -84,4 +122,8 @@ h1.bookField {
     button {
         margin: 20px 10px;
     }
+}
+
+span.label {
+    font-weight: bold;
 }

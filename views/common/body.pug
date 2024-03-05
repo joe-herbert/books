@@ -1,5 +1,8 @@
-mixin body(base)
+mixin body(base, user)
     if base
         script(src="/js/base.js")
-    a(href="./login")#loginLink Log in
+    if user
+        a(href="javascript:void()", onclick="logout()")#loginLink Log out
+    else
+        a(href="./login")#loginLink Log in
     //shared menus, logo image etc goes here

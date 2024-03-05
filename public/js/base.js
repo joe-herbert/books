@@ -53,3 +53,18 @@ function readFile(send, sendFunc) {
 
     FR.readAsDataURL(input.files[0]);
 }
+
+function logout() {
+    fetch(`${window.location.origin}/logout`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    }).then((response) => {
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            //TODO: error toast
+        }
+    });
+}

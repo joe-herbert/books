@@ -5,15 +5,33 @@ table {
     border-collapse: collapse;
     box-shadow: 0 0 10px -5px black;
     border-radius: 10px;
+    table-layout: fixed;
 
-    #authorCol,
-    #genreCol,
-    #tagCol {
-        width: 20%;
+    tr:not(:first-of-type) {
+        border-top: 1px solid #0003;
+        transition: 0.3s background-color;
+
+        &:hover {
+            background-color: #ddd;
+        }
+    }
+
+    /*#genreCol,
+    #tagCol,*/
+    #authorCol {
+        width: 200px;
+    }
+
+    #titleCol {
+        width: 350px;
     }
 
     #addCol {
-        width: 20px;
+        width: 75px;
+    }
+
+    #coverCol {
+        width: 75px;
     }
 
     .searchdown {
@@ -44,15 +62,16 @@ table {
         text-align: left;
     }
 
-    tr:nth-of-type(even) {
+    /*tr:nth-of-type(even) {
         background-color: #4444662a;
-    }
+    }*/
 
     img {
-        width: 100%;
-        max-height: 100px;
+        max-width: 100%;
+        max-height: 40px;
         margin: 0 auto;
         display: block;
+        width: auto;
 
         &:not([src=""]) {
             box-shadow: 0 0 3px 0px #444;
@@ -65,6 +84,12 @@ table {
 
     .sdInputWrapper {
         padding: 0;
+    }
+
+    .cellWrapper {
+        width: 100%;
+        max-height: 100px;
+        overflow: auto;
     }
 }
 

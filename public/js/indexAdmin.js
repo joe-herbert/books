@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveEntered: false,
         placeholder: "Title",
         inputName: "title",
+        simpleInput: true,
     });
     searchdown("authorInput", {
         values: authors,
@@ -14,7 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
         placeholder: "Author",
         inputName: "author",
     });
-    searchdown("genreInput", {
+    searchdown("blurbInput", {
+        multiple: false,
+        addValues: true,
+        placeholder: "Blurb",
+        inputName: "blurb",
+        simpleInput: true,
+    });
+    /*searchdown("genreInput", {
         values: genres,
         multiple: true,
         addValues: true,
@@ -27,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         addChoices: true,
         placeholder: "Tags",
         inputName: "tags",
-    });
+    });*/
 });
 
 function addBookFormSubmit() {
@@ -43,8 +51,9 @@ function sendBook(img) {
     const data = {
         title: sdGetValue("sdInput-title", true),
         author: sdGetValue("sdInput-author", true),
-        genres: sdGetValue("sdInput-genres", true),
-        tags: sdGetValue("sdInput-tags", true),
+        blurb: sdGetValue("sdInput-blurb", true),
+        //genres: sdGetValue("sdInput-genres", true),
+        //tags: sdGetValue("sdInput-tags", true),
     };
     if (img) {
         data.cover = img;

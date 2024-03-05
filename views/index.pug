@@ -7,7 +7,7 @@ html
     body
         include common/loader.html
         include common/body.pug
-        +body(true)
+        +body(true, user)
         h1 Miss Bibb's Books
         if title
             h2= title
@@ -23,11 +23,13 @@ html
             form(name="addBook", action="#", onsubmit="addBookFormSubmit(this); return false")
                 table
                     tr
-                        th
+                        th#coverCol
                         th#titleCol Title
                         th#authorCol Author
-                        th#genreCol Genre
-                        th#tagCol Tags
+                        th#blurbCol Blurb
+                        th#addCol
+                        //th#genreCol Genre
+                        //th#tagCol Tags
                     if admin
                         tr
                             td
@@ -39,26 +41,34 @@ html
                             td
                                 div#authorInput
                             td
+                                div#blurbInput
+                            //td
                                 div#genreInput
-                            td
+                            //td
                                 div#tagInput
-                            td#addCol
+                            td
                                 button Add
                     each book in books
                         tr
                             td
                                 if book.cover
-                                    img(src="" + book.cover)
-                            td 
-                                a(href="./book?id=" + encodeURIComponent(book.id))= book.title
+                                    .cellWrapper
+                                        a(href="./book?id=" + encodeURIComponent(book.id))
+                                            img(src="" + book.cover)
+                            td(onclick=`window.location.href="./book?id=${encodeURIComponent(book.id)}"`).clickable 
+                                span= book.title
+                            td(onclick=`window.location.href="./?author=${encodeURIComponent(book.author.id)}"`).clickable
+                                span= book.author.name
                             td
-                                a(href="./?author=" + encodeURIComponent(book.author.id))= book.author.name
-                            td
-                                each genre in book.genres
-                                    a(href="./?genre=" + encodeURIComponent(genre.id)).genre= genre.name
-                            td
-                                each tag in book.tags
-                                    a(href="./?tag=" + encodeURIComponent(tag.id)).tag= tag.name
+                                span= book.blurb
+                            //td
+                                .cellWrapper
+                                    each genre in book.genres
+                                        a(href="./?genre=" + encodeURIComponent(genre.id)).genre= genre.name
+                            //td
+                                .cellWrapper
+                                    each tag in book.tags
+                                        a(href="./?tag=" + encodeURIComponent(tag.id)).tag= tag.name
                             if admin
                                 td
                                     button(data-id=book.id, data-title=book.title).delete Delete

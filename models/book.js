@@ -16,8 +16,11 @@ module.exports = (sequelize, DataTypes) => {
     Book.init(
         {
             id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-            name: DataTypes.STRING,
+            name: { type: DataTypes.STRING, allowNull: false },
+            blurb: { type: DataTypes.STRING, allowNull: false },
             notes: DataTypes.STRING,
+            isbn: DataTypes.STRING(16),
+            link: DataTypes.TEXT,
             cover: DataTypes.BLOB("long"),
             authorId: {
                 type: DataTypes.UUID,

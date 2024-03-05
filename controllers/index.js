@@ -64,11 +64,12 @@ router.get("/", (req, res) => {
                 id: book.id,
                 title: book.name,
                 cover: book.cover,
+                blurb: book.blurb,
                 author: {
                     id: book.Author.id,
                     name: book.Author.name,
                 },
-                genres: book.Genres.map((genre) => {
+                /*genres: book.Genres.map((genre) => {
                     return {
                         id: genre.id,
                         name: genre.name,
@@ -79,7 +80,7 @@ router.get("/", (req, res) => {
                         id: tag.id,
                         name: tag.name,
                     };
-                }),
+                }),*/
             });
         }
         if (req.session && req.session.userId) {
@@ -132,6 +133,7 @@ router.get("/", (req, res) => {
                                     genres: genresMapped,
                                     tags: tagsMapped,
                                     filters: filters,
+                                    user: true,
                                 });
                             });
                         });
@@ -143,6 +145,7 @@ router.get("/", (req, res) => {
                         authors: [],
                         genres: [],
                         tags: [],
+                        user: true,
                     });
                 }
             });
@@ -153,6 +156,7 @@ router.get("/", (req, res) => {
                 authors: [],
                 genres: [],
                 tags: [],
+                user: false,
             });
         }
     });
@@ -231,6 +235,7 @@ router.post("/addBook", admin, (req, res) => {
                             .then((result) => {
                                 console.log("Complete");
                                 console.log(result);
+                                res.sendStatus(200);
                             })
                             .catch((err) => {
                                 //error
@@ -301,6 +306,7 @@ router.get("/book", (req, res) => {
                                                 authors: authors.map((a) => a.name),
                                                 genres: genresMapped,
                                                 tags: tagsMapped,
+                                                user: true,
                                             });
                                         });
                                     });
@@ -309,6 +315,7 @@ router.get("/book", (req, res) => {
                                 res.render("book", {
                                     book: book,
                                     admin: false,
+                                    user: true,
                                 });
                             }
                         })
@@ -316,12 +323,14 @@ router.get("/book", (req, res) => {
                             res.render("book", {
                                 book: book,
                                 admin: false,
+                                user: false,
                             });
                         });
                 } else {
                     res.render("book", {
                         book: book,
                         admin: false,
+                        user: false,
                     });
                 }
             })
@@ -336,10 +345,9 @@ router.get("/book", (req, res) => {
 });
 
 router.post("/editBook", admin, (req, res) => {
-    if (!req.body.name || !req.body.author || !req.body.id) {
+    if (!req.body.title || !req.body.author || !req.body.id || !req.body.blurb) {
         //error
-        console.log(req.body.name, req.body.author, req.body.id);
-        res.send("Need name, author, id");
+        res.send("Need name, author, id, blurb");
     }
     models.Author.findOrCreate({
         where: {
@@ -347,28 +355,37 @@ router.post("/editBook", admin, (req, res) => {
         },
     })
         .then((author, isCreated) => {
-            console.log(author[0].id);
             models.Book.findOne({
                 where: {
                     id: req.body.id,
                 },
             })
                 .then((book) => {
-                    if (req.body.name) {
-                        book.name = req.body.name;
+                    if (req.body.title) {
+                        book.name = req.body.title;
+                    }
+                    if (req.body.blurb) {
+                        book.blurb = req.body.blurb;
                     }
                     if (req.body.author && author[0].id) {
                         book.authorId = author[0].id;
                     }
-                    if (req.body.notes) {
+                    if (req.body.notes || req.body.notes === "") {
                         book.notes = req.body.notes;
                     }
-                    if (req.body.cover) {
+                    if (req.body.cover || req.body.cover === "") {
                         book.cover = req.body.cover;
                     }
+                    if (req.body.isbn || req.body.isbn === "") {
+                        book.isbn = req.body.isbn;
+                    }
+                    if (req.body.link || req.body.link === "") {
+                        book.link = req.body.link;
+                    }
+                    console.log(req.body);
+                    console.log(book);
                     book.save()
                         .then((dbBook) => {
-                            console.log(dbBook);
                             //generate genre and tag promises
                             let promises = [];
                             promises.push(
@@ -406,6 +423,8 @@ router.post("/editBook", admin, (req, res) => {
                                 .then((result) => {
                                     //generate associations promises
                                     let promises = [];
+                                    let genres = {};
+                                    let tags = {};
                                     for (let item of result) {
                                         item = item[0];
                                         if (item) {
@@ -418,6 +437,7 @@ router.post("/editBook", admin, (req, res) => {
                                                         },
                                                     }),
                                                 );
+                                                genres[item.name] = item.id;
                                             } else {
                                                 promises.push(
                                                     models.BookTag.findOrCreate({
@@ -427,6 +447,7 @@ router.post("/editBook", admin, (req, res) => {
                                                         },
                                                     }),
                                                 );
+                                                tags[item.name] = item.id;
                                             }
                                         }
                                     }
@@ -435,7 +456,12 @@ router.post("/editBook", admin, (req, res) => {
                                         .then((result) => {
                                             console.log("Complete");
                                             console.log(result);
-                                            res.sendStatus(200);
+                                            let data = {
+                                                author: book.authorId,
+                                                genres: genres,
+                                                tags: tags,
+                                            };
+                                            res.status(200).send(JSON.stringify(data));
                                         })
                                         .catch((err) => {
                                             //error
